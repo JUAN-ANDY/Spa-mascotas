@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="SPA Mascotas - Sistema de Gestión para Tienda y Peluquería Canina">
+    <meta name="keywords" content="mascotas, spa, peluquería, grooming, perros, gatos, tienda">
+    <meta name="author" content="SPA Mascotas">
+    <meta name="theme-color" content="#4e73df">
+    
+    <!-- Open Graph / Redes Sociales -->
+    <meta property="og:title" content="SPA Mascotas - Sistema de Gestión">
+    <meta property="og:description" content="Sistema integral para la gestión de tu SPA y Tienda de Mascotas">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="es_BO">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>🐾</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>🐾</text></svg>">
+    
+    <!-- Fuentes de Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    
+    <!-- Título dinámico -->
+    <title>SPA Mascotas - Sistema de Gestión</title>
+    
+    <style>
+        /* Estilos críticos para carga inicial */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f5f6fa;
+            color: #5a5c69;
+        }
+        
+        /* Pantalla de carga mientras Vue se inicializa */
+        #app-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        #app-loading .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+        
+        #app-loading .loading-logo {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        #app-loading h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        #app-loading p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* Estilos para impresión */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            
+            body {
+                background: white;
+            }
+            
+            .content {
+                padding: 0 !important;
+            }
+        }
+        
+        /* Estilos para scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Pantalla de carga inicial -->
+    <div id="app-loading">
+        <div class="loading-logo">🐾</div>
+        <div class="loading-spinner"></div>
+        <h2>SPA Mascotas</h2>
+        <p>Cargando sistema de gestión...</p>
+    </div>
+    
+    <!-- Aplicación Vue -->
+    <div id="app"></div>
+    
+    <!-- Script principal de Vue -->
+    <script type="module" src="/src/main.js"></script>
+    
+    <!-- Script para ocultar pantalla de carga cuando Vue monte -->
+    <script>
+        // Esperar a que Vue se monte y ocultar la pantalla de carga
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                    const appDiv = document.getElementById('app');
+                    if (appDiv && appDiv.children.length > 0) {
+                        const loadingDiv = document.getElementById('app-loading');
+                        if (loadingDiv) {
+                            // Animación de salida
+                            loadingDiv.style.transition = 'opacity 0.5s ease';
+                            loadingDiv.style.opacity = '0';
+                            setTimeout(() => {
+                                loadingDiv.style.display = 'none';
+                            }, 500);
+                        }
+                        observer.disconnect();
+                    }
+                }
+            });
+        });
+        
+        observer.observe(document.getElementById('app'), {
+            childList: true,
+            subtree: true
+        });
+        
+        // Fallback: ocultar pantalla de carga después de 8 segundos
+        setTimeout(() => {
+            const loadingDiv = document.getElementById('app-loading');
+            if (loadingDiv && loadingDiv.style.display !== 'none') {
+                loadingDiv.style.transition = 'opacity 0.5s ease';
+                loadingDiv.style.opacity = '0';
+                setTimeout(() => {
+                    loadingDiv.style.display = 'none';
+                }, 500);
+            }
+        }, 8000);
+    </script>
+    
+    <!-- Soporte para navegadores antiguos -->
+    <noscript>
+        <div style="text-align:center; padding: 50px; font-family: sans-serif;">
+            <h1>⚠️ JavaScript Requerido</h1>
+            <p>Este sistema requiere JavaScript para funcionar correctamente.</p>
+            <p>Por favor, habilita JavaScript en tu navegador.</p>
+            <hr>
+            <h1>⚠️ JavaScript Required</h1>
+            <p>This system requires JavaScript to work properly.</p>
+            <p>Please enable JavaScript in your browser.</p>
+        </div>
+    </noscript>
+</body>
+</html>
